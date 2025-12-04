@@ -7,13 +7,13 @@ const SuperTopupPremiumModel = require('../models/supertopupPremiumModel');
 function capAgeForLookup(val) {
     const n = parseInt(val, 10);
     if (Number.isNaN(n)) return null;
-    return Math.min(n, 61);
+    return Math.min(n, 71);
 }
 
-exports.calculateHDFCSuperTopupPremium = async (req, res) => {
+exports.calculateBAJAJSuperTopupPremium = async (req, res) => {
     try {
         const { companyId, planId } = req.params;
-// console.log("request", req.body);
+        // console.log("request", req.body);
 
         const {
             coverAmount,
@@ -91,7 +91,7 @@ exports.calculateHDFCSuperTopupPremium = async (req, res) => {
 
         // SUCCESS RESPONSE
         return res.json({
-            message: "HDFC Super Top-Up Premium Calculated",
+            message: "BAJAJ Super Top-Up Premium Calculated",
             companyId,
             companyName: company.company_name,
             logoUrl: company.logo,
@@ -110,7 +110,7 @@ exports.calculateHDFCSuperTopupPremium = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("HDFC SuperTopup Error:", err);
+        console.error("BAJAJ SuperTopup Error:", err);
         return res.status(500).json({ error: "Internal server error" });
     }
 };

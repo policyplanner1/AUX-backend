@@ -47,6 +47,7 @@ const iciciRoutes = require('./routes/iciciRoutes');
 const nivaRoutes = require('./routes/nivaRoutes');
 const relianceRoutes = require('./routes/relianceRoutes');
 const proposalRoutes = require('./routes/proposalRoutes');
+const otpRoutes = require("./routes/otpRoutes");
 
 // Mount routes.  Each company has its own route namespace.
 app.use('/companies', companyRoutes);
@@ -61,7 +62,7 @@ app.use('/niva', nivaRoutes);
 app.use('/reliance', relianceRoutes);
 
 app.use('/proposals', proposalRoutes);
-
+app.use("/otp", otpRoutes);
 
 // Health check endpoint
 app.get('/', (req, res) => {
