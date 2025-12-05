@@ -2,12 +2,15 @@ const express = require('express');
 const router = express.Router();
 const bajajController = require('../controllers/bajajController');
 const bajajSuperTopupController = require('../controllers/bajajSuperTopupController');
-
+const bajajPAController = require('../controllers/bajajPAController');
 
 // POST /api/bajaj/:companyId/:planId/premium
 router.post('/:companyId/:planId/premium', bajajController.calculatePremium);
 
 // POST /api/bajaj/:companyId/:planId/supertopup
 router.post('/:companyId/:planId/supertopup', bajajSuperTopupController.calculateBAJAJSuperTopupPremium);
+
+router.post('/:companyId/:planId/pa', bajajPAController.getPremium);
+
 
 module.exports = router;
