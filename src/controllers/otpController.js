@@ -32,13 +32,13 @@ exports.sendOTP = async (req, res) => {
     if (existingRows.length > 0) {
       const existing = existingRows[0];
 
-      if (existing.attempts >= 3) {
-        // console.log("⛔ Too many OTP attempts");
-        return res.json({
-          success: false,
-          message: "Too many OTP attempts. Try later.",
-        });
-      }
+      // if (existing.attempts >= 3) {
+      //   // console.log("⛔ Too many OTP attempts");
+      //   return res.json({
+      //     success: false,
+      //     message: "Too many OTP attempts. Try later.",
+      //   });
+      // }
 
     //   console.log("🛠 Updating OTP for:", mobile);
 
