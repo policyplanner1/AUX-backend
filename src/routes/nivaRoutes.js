@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const nivaController = require('../controllers/nivaController');
+const nivabupaPAController = require('../controllers/nivabupaPAController');
 
-// POST /api/niva/:companyId/:planId/premium
-router.post('/:companyId/:planId/premium', nivaController.calculatePremium);
+// POST /api/reliance/:companyId/:planId/premium
+
+router.post('/:companyId/:planId/pa', nivabupaPAController.getPremium);
+
 
 module.exports = router;
