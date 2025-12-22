@@ -32,8 +32,29 @@ exports.createProposal = async (req, res) => {
     gstAmount,
     totalPremium,
     adults = [],
-    children = []
-  } = data;
+    children = [],
+
+    // ✅ NEW FIELDS (coming from Health/SuperTopup/PA payload)
+    plan_type,
+      proposer_occupation_type,
+      proposer_risk_category,
+      proposer_risk_occupation,
+      additional_covers,
+    } = data;
+
+  // ✅ additional_covers safe string (store JSON in DB)
+  let additionalCoversStr = null;
+if (additional_covers != null) {
+  if (typeof additional_covers === "string") {
+    additionalCoversStr = additional_covers;
+  } else {
+    try {
+      additionalCoversStr = JSON.stringify(additional_covers);
+    } catch (e) {
+      additionalCoversStr = null;
+    }
+  }
+}
 
   let connection;
 
@@ -46,61 +67,76 @@ exports.createProposal = async (req, res) => {
 
     // 3) Insert into health_proposals
     const insertProposalSql = `
-      INSERT INTO health_proposals (
-        product_name,
-        selected_product_type,
-        pincode,
-        city_state,
-        zone,
-        upgrade_zone,
-        adult_count,
-        child_count,
-        proposer_name,
-        proposer_dob,
-        proposer_gender,
-        proposer_email,
-        proposer_phone,
-        sum_insured,
-        selected_tenure,
-        annual_income,
-        nri_discount,
-        include_self,
-        bureau_discount,
-        aadhar_number,
-        pan_number,
-        base_premium,
-        gst_amount,
-        total_premium
-      )
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-    `;
+    INSERT INTO health_proposals (
+    product_name,
+    selected_product_type,
+    pincode,
+    city_state,
+    zone,
+    upgrade_zone,
+    adult_count,
+    child_count,
+    proposer_name,
+    proposer_dob,
+    proposer_gender,
+    proposer_email,
+    proposer_phone,
+    sum_insured,
+    selected_tenure,
+    annual_income,
+    nri_discount,
+    include_self,
+    bureau_discount,
+    aadhar_number,
+    pan_number,
+    base_premium,
+    gst_amount,
+    total_premium,
 
-    const proposalValues = [
-      productName,
-      selectedProductType,
-      pincode,
-      cityState,
-      zone,
-      upgradeZone,
-      adultCount,
-      childCount,
-      proposerName,
-      proposerDOB,
-      proposerGender,
-      proposerEmail,
-      proposerPhone,
-      sumInsured,
-      selectedTenure,
-      annualIncome,
-      nriDiscount,
-      includeSelf,
-      bureauDiscount,
-      aadharNumber,
-      panNumber,
-      basePremium,
-      gstAmount,
-      totalPremium
-    ];
+    plan_type,
+    proposer_occupation_type,
+    proposer_risk_category,
+    proposer_risk_occupation,
+    additional_covers
+  )
+  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
+          ?,?,?,?,?)
+`;
+
+
+  const proposalValues = [
+  productName,
+  selectedProductType,
+  pincode,
+  cityState,
+  zone,
+  upgradeZone,
+  adultCount,
+  childCount,
+  proposerName,
+  proposerDOB,
+  proposerGender,
+  proposerEmail,
+  proposerPhone,
+  sumInsured,
+  selectedTenure,
+  annualIncome,
+  nriDiscount,
+  includeSelf,
+  bureauDiscount,
+  aadharNumber,
+  panNumber,
+  basePremium,
+  gstAmount,
+  totalPremium,
+
+  plan_type || null,
+  proposer_occupation_type || null,
+  proposer_risk_category ? Number(proposer_risk_category) : null,
+  proposer_risk_occupation || null,
+  additionalCoversStr
+];
+
 
     const [proposalResult] = await connection.query(insertProposalSql, proposalValues);
     const proposalId = proposalResult.insertId;

@@ -44,6 +44,7 @@ exports.getPremium = async (req, res) => {
       plan: plan.plan_name,
       logoUrl: company.logo,
       brochureUrl: plan.broucher,
+      onePagerUrl: plan.onePager,
       otherDetails: plan.other_details,
       coverAmount,
       base,
