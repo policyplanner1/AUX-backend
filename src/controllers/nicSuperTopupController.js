@@ -96,6 +96,7 @@ exports.calculateNICSuperTopupPremium = async (req, res) => {
             companyName: company.company_name,
             logoUrl: company.logo,
             brochureUrl: plan.broucher,
+            onePagerUrl: plan.onePager,
             planName: plan.plan_name,
             coverAmount,
             adults,

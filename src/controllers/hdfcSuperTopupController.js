@@ -96,6 +96,7 @@ exports.calculateHDFCSuperTopupPremium = async (req, res) => {
             companyName: company.company_name,
             logoUrl: company.logo,
             brochureUrl: plan.broucher,
+            onePagerUrl: plan.onePager,
             planId,
             planName: plan.plan_name,
             coverAmount,
