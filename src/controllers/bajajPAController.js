@@ -1,5 +1,6 @@
 const CompanyModel = require("../models/companyModel");
 const PlanModel = require("../models/planModel");
+const FeaturesModel = require('../models/featuresModel');
 const paPremiumModel = require("../models/paPremiumModel");
 
 exports.getPremium = async (req, res) => {
@@ -35,6 +36,14 @@ exports.getPremium = async (req, res) => {
       return res.status(404).json({ error: "Premium data not found" });
     }
 
+
+    // FEATURES
+    const features = await FeaturesModel.findActiveFeatures(planId);
+    if (!features) {
+        return res.status(404).json({ error: "Features not found or inactive" });
+    }
+
+
     // Extract base + addon
     const base = rows.find(r => r.premium_type === "basic")?.premium_value || 0;
     const addon = rows.find(r => r.premium_type === "addon")?.premium_value || 0;
@@ -49,6 +58,7 @@ exports.getPremium = async (req, res) => {
       coverAmount,
       base,
       addon,
+      features,
     });
 
   } catch (err) {
