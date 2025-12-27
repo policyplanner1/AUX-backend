@@ -52,6 +52,7 @@ const otpRoutes = require("./routes/otpRoutes");
 const iffcoRoutes = require('./routes/iffcoRoutes');
 const unitedRoutes = require('./routes/unitedRoutes');
 const digitRoutes = require('./routes/digitRoutes');
+const niaRoutes = require('./routes/niaRoutes');
 
 // Mount routes.  Each company has its own route namespace.
 app.use('/companies', companyRoutes);
@@ -68,6 +69,7 @@ app.use('/reliance', relianceRoutes);
 app.use('/iffco', iffcoRoutes);
 app.use('/united', unitedRoutes);
 app.use('/digit', digitRoutes);
+app.use('/nia', niaRoutes);
 
 app.use('/proposals', proposalRoutes);
 app.use("/otp", otpRoutes);
