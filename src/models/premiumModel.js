@@ -32,7 +32,7 @@ class PremiumModel {
        FROM ?? WHERE Zone = ?`,
       [tableName, zone]
     );
-
+console.log('🔍 PremiumModel.findPremiumForMember - Queried rows:', rows.length);
 
     for (const row of rows) {
       const rowAdults =
