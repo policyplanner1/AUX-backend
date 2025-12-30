@@ -29,10 +29,10 @@ exports.getPremium = async (req, res) => {
       .toLowerCase()
       .replace(/\s+/g, "_");
 
-    // console.log("Table Name:", tableName);
+    console.log("Table Name:", tableName);
 
     // Fetch premium rows
-    const premium = await gmcPremiumModel.getPremiumByCover(tableName, coverAmount, age, 9, noOfAdults, noOfChildren);
+    const premium = await gmcPremiumModel.getPremiumByCover(tableName, coverAmount, age, 1, noOfAdults, noOfChildren);
 
     if (!premium) {
       return res.status(404).json({ error: "GMC Premium data not found" });

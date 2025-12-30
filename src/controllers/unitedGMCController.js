@@ -6,7 +6,7 @@ const gmcPremiumModel = require("../models/gmcPremiumModel");
 exports.getPremium = async (req, res) => {
   try {
     const { companyId, planId } = req.params;
-    const { coverAmount, age, zone, sage, c1age, c2age, c3age, c4age } = req.body;
+    const { coverAmount, age, zone, noOfAdults, noOfChildren } = req.body;
 
     if (!companyId || !planId || !coverAmount) {
       return res.status(400).json({ error: "Missing parameters" });
@@ -30,27 +30,7 @@ exports.getPremium = async (req, res) => {
       .replace(/\s+/g, "_");
 
       // console.log("Table Name:", tableName);
-
-    // Build members and counts
-    let noOfAdults = 0;
-    let noOfChildren = 0;
-    const members = [];
-
-    if (age != null) {
-      noOfAdults += 1;
-      members.push({ label: 'self', age: parseInt(age, 10) });
-    }
-    if (sage != null) {
-      noOfAdults += 1;
-      members.push({ label: 'spouse', age: parseInt(sage, 10) });
-    }
-    [c1age, c2age, c3age, c4age].forEach((a, idx) => {
-      if (a != null) {
-        noOfChildren += 1;
-        members.push({ label: `child${idx + 1}`, age: parseInt(a, 10) });
-      }
-    });
-
+ 
     // Fetch premium rows
     const premium = await gmcPremiumModel.getPremiumByCover(tableName, coverAmount, age, 9, noOfAdults, noOfChildren);
 
