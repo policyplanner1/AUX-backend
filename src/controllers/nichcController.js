@@ -1,12 +1,12 @@
 const CompanyModel = require("../models/companyModel");
 const PlanModel = require("../models/planModel");
 const FeaturesModel = require('../models/featuresModel');
-const gmcPremiumModel = require("../models/gmcPremiumModel");
+const hcPremiumModel = require("../models/hcPremiumModel");
 
 exports.getPremium = async (req, res) => {
   try {
     const { companyId, planId } = req.params;
-    const { coverAmount, age, zone, noOfAdults, noOfChildren } = req.body;
+    const { coverAmount, age, zone, noOfAdults, noOfChildren, noOfDays } = req.body;
 
     if (!companyId || !planId || !coverAmount) {
       return res.status(400).json({ error: "Missing parameters" });
@@ -29,13 +29,13 @@ exports.getPremium = async (req, res) => {
       .toLowerCase()
       .replace(/\s+/g, "_");
 
-    console.log("Table Name:", tableName);
+    // console.log("Table Name:", tableName);
 
     // Fetch premium rows
-    const premium = await gmcPremiumModel.getPremiumByCover(tableName, coverAmount, age, zone, noOfAdults, noOfChildren);
+    const premium = await hcPremiumModel.getPremiumByCover(tableName, coverAmount, age, 9, noOfAdults, noOfChildren, noOfDays);
 
     if (!premium) {
-      return res.status(404).json({ error: "GMC Premium data not found" });
+      return res.status(404).json({ error: "HC Premium data not found" });
     }
 
 
