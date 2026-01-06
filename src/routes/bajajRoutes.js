@@ -3,6 +3,7 @@ const router = express.Router();
 const bajajController = require('../controllers/bajajController');
 const bajajSuperTopupController = require('../controllers/bajajSuperTopupController');
 const bajajPAController = require('../controllers/bajajPAController');
+const bajajHCController = require('../controllers/bajajhcController');
 
 // POST /api/bajaj/:companyId/:planId/premium
 router.post('/:companyId/:planId/premium', bajajController.calculatePremium);
@@ -12,5 +13,6 @@ router.post('/:companyId/:planId/supertopup', bajajSuperTopupController.calculat
 
 router.post('/:companyId/:planId/pa', bajajPAController.getPremium);
 
+router.post('/:companyId/:planId/hc', bajajHCController.getPremium);
 
 module.exports = router;

@@ -1,63 +1,50 @@
+// src/models/hcPremiumModel.js
 const pool = require("../config/db");
 
-const gmcPremiumModel = {
-  async getPremiumByCover(
-    tableName,
-    coverAmount,
-    age,
-    zone,
-    noOfAdults,
-    noOfChildren,
-    noOfDays
-  ) {
+const hcPremiumModel = {
+  async getPremiumByCover(tableName, coverAmount, age, zone, noOfAdults, noOfChildren, noOfDays) {
     const column = `c_${Number(coverAmount)}`;
 
-    // console.log("GMC Premium Params:", {
-    //   tableName,
-    //   coverAmount,
-    //   age,
-    //   zone,
-    //   noOfAdults,
-    //   noOfChildren
-    // });
 
-    let whereClauses = [];
-    let values = [];
+    if (!/^c_\d+$/.test(column)) throw new Error("Invalid coverAmount column");
+    if (!/^[a-z0-9_]+$/i.test(tableName)) throw new Error("Invalid table name");
 
-    // mandatory filters
-    whereClauses.push("age = ?");
-    values.push(age);
+    const whereClauses = [];
+    const values = [];
 
-    whereClauses.push("zone = ?");
-    values.push(zone);
+    // ✅ Use EXACT column names from DB
+    whereClauses.push("`Age` = ?");
+    values.push(Number(age));
 
-    whereClauses.push("no_of_days = ?");
-    values.push(noOfDays);
+   const hasZone = zone !== undefined && zone !== null && String(zone).trim() !== "";
+    if (hasZone) {
+      whereClauses.push("`Zone` = ?");
+      values.push(Number(zone));
+    }
 
-    // optional filters
+    whereClauses.push("`no_of_days` = ?");
+    values.push(Number(noOfDays));
+
     if (noOfAdults !== undefined && noOfAdults !== null) {
-      whereClauses.push("No_of_Adults = ?");
-      values.push(noOfAdults);
+      whereClauses.push("`no_of_Adult` = ?");
+      values.push(Number(noOfAdults));
     }
 
     if (noOfChildren !== undefined && noOfChildren !== null) {
-      whereClauses.push("No_of_Children = ?");
-      values.push(noOfChildren);
+      whereClauses.push("`no_of_child` = ?");
+      values.push(Number(noOfChildren));
     }
 
     const query = `
       SELECT \`${column}\` AS premium_value
-      FROM ${tableName}
+      FROM \`${tableName}\`
       WHERE ${whereClauses.join(" AND ")}
       LIMIT 1
     `;
 
-    // console.log("GMC Premium Query:", query, values);
-
     const [rows] = await pool.query(query, values);
-
     return rows.length ? rows[0].premium_value : null;
   },
 };
 
-module.exports = gmcPremiumModel;
+module.exports = hcPremiumModel;
