@@ -7,7 +7,7 @@ const PremiumModel = require('../models/premiumModel');
 function capAgeForLookup(val) {
   const n = parseInt(val, 10);
   if (Number.isNaN(n)) return null;
-  return Math.min(n, 76);
+  return Math.min(n, 86);
 }
 
 /**
@@ -34,9 +34,11 @@ exports.calculatePremium = async (req, res) => {
     } = req.body;
 
     // Validate input
-    if (!companyId || !planId || !coverAmount || !zone || age == null) {
-      return res.status(400).json({ error: 'Missing required parameters' });
+   if (!companyId || !planId || !coverAmount || zone == null || age == null) {
+      return res.status(400).json({ error: "Missing required parameters" });
     }
+
+  const zoneNum = parseInt(zone, 10);
 
     // Fetch company and plan (must be active = status 1)
     const company = await CompanyModel.findActiveById(companyId);
@@ -89,10 +91,11 @@ exports.calculatePremium = async (req, res) => {
       tableName,
       coverAmount,
       eldestLookupAge,
-      9,
+      zoneNum,
       noOfAdults,
       noOfChildren
     );
+
 
     if (basePremium == null) {
       return res.status(404).json({
@@ -110,7 +113,7 @@ exports.calculatePremium = async (req, res) => {
       planId,
       planName: plan.plan_name,
       coverAmount,
-      zone,
+      zone: zoneNum,
       noOfAdults,
       noOfChildren,
       eldestActualAge,
