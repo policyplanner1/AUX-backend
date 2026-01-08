@@ -6,7 +6,7 @@ const paPremiumModel = require("../models/paPremiumModel");
 exports.getPremium = async (req, res) => {
   try {
     const { companyId, planId } = req.params;
-    const { coverAmount } = req.body;
+    const { coverAmount, category } = req.body;
 
     if (!companyId || !planId || !coverAmount) {
       return res.status(400).json({ error: "Missing parameters" });
@@ -29,23 +29,23 @@ exports.getPremium = async (req, res) => {
       .toLowerCase()
       .replace(/\s+/g, "_");
 
-      console.log("Table Name:", tableName);
-
     // Fetch premium rows
-    const rows = await paPremiumModel.getPremiumByCover(tableName, coverAmount);
+    const rows = await paPremiumModel.getPremiumByCover(tableName, coverAmount, category);
 
     if (!rows || rows.length === 0) {
       return res.status(404).json({ error: "Premium data not found" });
     }
 
+    console.log(rows);
 
     // FEATURES
     const features = await FeaturesModel.findActiveFeatures(planId);
     if (!features) {
-        return res.status(404).json({ error: "Features not found or inactive" });
+      return res.status(404).json({ error: "Features not found or inactive" });
     }
 
-   // Extract base + addon
+
+    // Extract base + addon
     const premiums = rows.map(r => ({
       type: r.premium_type,
       value: Number(r.premium_value)
@@ -63,7 +63,6 @@ exports.getPremium = async (req, res) => {
       premiums,
       features,
     });
-
 
   } catch (err) {
     console.error(err);

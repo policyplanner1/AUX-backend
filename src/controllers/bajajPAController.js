@@ -44,9 +44,12 @@ exports.getPremium = async (req, res) => {
     }
 
 
-    // Extract base + addon
-    const base = rows.find(r => r.premium_type === "basic")?.premium_value || 0;
-    const addon = rows.find(r => r.premium_type === "addon")?.premium_value || 0;
+   // Extract base + addon
+    const premiums = rows.map(r => ({
+      type: r.premium_type,
+      value: Number(r.premium_value)
+    }));
+    
 
     return res.json({
       company: company.company_name,
@@ -56,10 +59,10 @@ exports.getPremium = async (req, res) => {
       onePagerUrl: plan.onePager,
       otherDetails: plan.other_details,
       coverAmount,
-      base,
-      addon,
+      premiums,
       features,
     });
+
 
   } catch (err) {
     console.error(err);
